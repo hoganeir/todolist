@@ -1,0 +1,189 @@
+* {
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+body {
+    background-color: white;
+    padding: 0px;
+    margin: 0px;
+    height: 100vh;
+    width: 100vw;
+}
+
+#page {
+    background: white;
+    color: white;
+    width: 100%;
+    height: 100%;
+    display:flex;
+    flex-direction: column;
+}
+
+#headline {
+    background-color: blue;
+    color: white;
+    padding: 15px;
+}
+
+#main {
+    display:flex;
+}
+
+.form {
+    background-color: blue;
+    padding: 7px;
+    width: 225px;
+    margin: 3px;
+    margin-top: 0px;
+    border-radius: 15px;
+    height: 125px;
+    display: flex;
+    flex-direction: row;
+}
+
+#todoform {
+    display: flex;
+    flex-direction: row;
+}
+
+#submitButton {
+    background-color: red;
+    color: white;
+    margin: 3px;
+    padding: 5px;
+    margin-left: 0;
+    /* display:flex;
+    flex-direction: row; */
+}
+
+#clearButton {
+    background-color: red;
+    color: white;
+    margin: 3px;
+    padding: 5px;
+    /* display:flex;
+    flex-direction: row; */
+}
+
+#taskLabel {
+    color: white;
+}
+
+/* #taskList {
+    flex-grow:1;
+    padding: 5px;
+    border-radius: 15px;
+    display:flex;
+    flex-direction: column;
+} */
+
+#tasks-header {
+    color: white;
+    background-color: blue;
+    padding: 7px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+#tasks-lists {
+    flex-grow:1;
+    padding: 0px;
+    border-radius: 15px;
+    display:flex;
+    flex-direction: row;
+}
+
+/* .list-title {
+    color: white;
+    background-color: blue;
+    padding: 7px;
+    border-radius: 15px;
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+} */
+
+#todoheader {
+    color: white;
+    background-color: blue;
+    padding: 5px;
+    border-radius: 15px;
+    margin: 2px;
+    display:flex;
+    flex-direction: row;
+}
+
+#doneheader {
+    color: white;
+    background-color: blue;
+    padding: 5px;
+    border-radius: 15px;
+    margin: 2px;
+    display:flex;
+    flex-direction: row;
+}
+
+#todo-list {
+    display: flex;
+    flex-direction: column;
+    margin: 2px;
+}
+
+#todoList {
+    margin: 2px;
+}
+
+.list {
+    background-color: blue;
+    color: white;
+    margin: 5px;
+    flex-grow:1;
+    padding: 22px;
+    padding-top: 10px;
+    border-radius: 15px;
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#lineitems {
+    display: flex;
+    flex-direction: column;
+    margin: 2px;
+}
+
+.todo-buttons {
+    display: flex;
+    flex-direction: row;
+    margin: 2px;
+}
+
+#donebutton {
+    margin: 2px;
+}
+
+#deletebutton {
+    margin: 2px;
+}
+
+.delete-button {
+    display:flex;
+    flex-direction: column;
+    margin: 2px;
+}
+
+.done-button {
+    display:flex;
+    flex-direction: column;
+    margin: 2px;
+}
+
+/* .jumbotron {
+    color: white;
+    background-color: green;
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 15px;
+} */

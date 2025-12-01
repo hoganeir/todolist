@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogan's 2Do List</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css"
+        integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- <div class="jumbotron jumbotron-fluid">
+    <div class ="container">
+        <h1 class="headline">Carpe Diem!</h1>
+    </div>
+</div> -->
+
+<body>
+    <div id="page">
+        <h1 id="headline">Hogan's To Do List</h1>
+        <div id="main">
+            <div class="form">
+                <form id="todoForm">
+                    <label for="taskInput" id="taskLabel">New Task:</label>
+                    <div><input type="text" id="taskInput" placeholder="Add task here" required></div>
+                    <div>
+                        <button type="submitButton" id="submitButton" class="btn btn-primary">Add task</button>
+                        <button type="clearButton" id="clearButton" class="btn btn-danger">Clear tasks</button>
+                    </div>
+                </form>
+            </div>
+            <div id="tasks">  
+                <div id="tasks-header">
+                    <label for="taskheader" id="taskheader">Tasks</label>
+                </div>
+                    <div id="tasks-lists">
+                        <div id="todo-list">
+                        <label for="todoheader" id="todoheader">To Do</label>
+                        <!-- <div class="list-title">To Do</div> -->
+                            <ol class="list" id="todoList"></ol>
+                        </div>
+                        <div id="done-list">
+                        <label for="doneheader" id="doneheader">Done</label>
+                        <!-- <div class="list-title">Done</div> -->
+                            <ol class="list" id="doneList"></ol>
+                    </div>
+                    </div>
+            </div>
+            <script type="text/javascript">
+                    let state = [];
+                    async function getTodos() {
+                        const response = await fetch("/api/todos");
+                        const data = await response.json();
+                        state = data;
+                        render();
+                    }
+
+                    function render() {
+                        const todoList = document.getElementById("todoList");
+                        const doneList = document.getElementById("doneList");
+                        todoList.innerHTML = "";
+                        doneList.innerHTML = "";
+                        state.forEach(todo => {
+                            const li = document.createElement("li");
+                            // li.textContent = todo.text;
+                            li.dataset.id = todo.id;
+                            li.classList.add('todo-item');
+                            
+                            // remove the line-through
+                            // if (todo.completed) {
+                            //     li.style.textDecoration = 'line-through';
+                            // }
+
+                            const taskTextSpan = document.createElement('span');
+                            taskTextSpan.textContent = todo.text;
+                            li.appendChild(taskTextSpan);
+                            
+                            const buttonDiv = document.createElement('div');
+                            buttonDiv.classList.add('todo-buttons');
+
+                            const toggleButton = document.createElement('button');
+                            toggleButton.classList.add('btn', 'btn-xs');
+
+                            if (todo.completed) {
+                                toggleButton.textContent = 'Undo';
+                                toggleButton.classList.add('btn-warning');
+                            } else {
+                                toggleButton.textContent = 'Done';
+                                toggleButton.classList.add('btn', 'btn-default', 'btn-xs');
+                            }
+
+                            toggleButton.addEventListener('click', async () => {
+                                const response = await fetch(`/api/todos/${todo.id}`, {
+                                    method: "PUT",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ completed: !todo.completed })
+                                });
+                                if (response.ok) {
+                                    await getTodos();
+                                };
+                            });
+                            buttonDiv.appendChild(toggleButton);
+                            
+                            // // done button moves item to doneList
+                            // const doneButton = document.createElement('button');
+                            // doneButton.classList.add('btn', 'btn-default', 'btn-xs');
+                            // doneButton.textContent = 'Done';
+                            // doneButton.classList.add('done-button');
+                            
+                            // doneButton.addEventListener('click', async () => {
+                            //     const response = await fetch(`/api/todos/${todo.id}`, {
+                            //         method: "PUT",
+                            //         headers: {
+                            //             "Content-Type": "application/json"
+                            //         },
+                            //         body: JSON.stringify({ completed: !todo.completed })
+                            //     });
+                            //     if (response.ok) {
+                            //         await getTodos();
+                            //     };
+                            //     // doneList.appendChild(/api/todos/${todo.id});
+                            // });
+                            // buttonDiv.appendChild(doneButton);
+                            
+                            
+                            const deleteButton = document.createElement('button');
+                            deleteButton.classList.add('btn', 'btn-default', 'btn-xs');
+                            deleteButton.textContent = 'Delete';
+                            deleteButton.classList.add('delete-button');
+                            deleteButton.addEventListener('click', async () => {
+                                const response = await fetch(`/api/todos/${todo.id}`, {
+                                    method: "DELETE"
+                                });
+                                if (response.ok) {
+                                    await getTodos();
+                                };
+                            });
+                            buttonDiv.appendChild(deleteButton);
+
+                            // delete button for Done list (see api/todos/done)
+                            // undo button that sends item back to To Do
+
+                            li.appendChild(buttonDiv);
+
+                            if (todo.completed) {
+                                doneListElement.appendChild(li);
+                            } else {
+                                todoListElement.appendChild(li);
+                            }
+                        });
+                    };
+
+                    // function render() {
+                    //     const doneList = document.getElementById("doneList");
+                    //     todoList.innerHTML = "";
+                    //     state.forEach(todo => {
+                    //         const li = document.createElement("li");
+                    //         li.textContent = todo.text;
+                    //         li.dataset.id = todo.id;
+                    //         li.classList.add('done-item');
+
+                    //     const doneButtonDiv = document.createElement('div');
+                    //     doneButtonDiv.classList.add('done-buttons');
+
+                    //     const undoButton = document.createElement('button');
+                    //     undoButton.classList.add('btn', 'btn-default', 'btn-xs');
+                    //         undoButton.textContent = 'Undo';
+                    //         undoButton.classList.add('undo-button');
+                    //         doneButton.addEventListener('click', async () => {
+                    //             const response = await fetch(`/api/todos/${done.id}`, {
+                    //                 method: "PUT",
+                    //                 headers: {
+                    //                     "Content-Type": "application/json"
+                    //                 },
+                    //                 body: JSON.stringify({ completed: !todo.completed })
+                    //                 });
+                    //             if (response.ok) {
+                    //                 await getTodos();
+                    //             }
+                    //             todoList.appendChild(/api/done/${done.id});
+                    //         });
+                    //         buttonDiv.appendChild(doneButton);
+
+                    //         const deleteButton = document.createElement('button');
+                    //         deleteButton.classList.add('btn', 'btn-default', 'btn-xs');
+                    //         deleteButton.textContent = 'Delete';
+                    //         deleteButton.classList.add('delete-button');
+                    //         deleteButton.addEventListener('click', async () => {
+                    //             const response = await fetch(`/api/done/${done.id}`, {
+                    //                 method: "DELETE"
+                    //             });
+                    //             if (response.ok) {
+                    //                 await getTodos();
+                    //             };
+                    //         });
+                    //         buttonDiv.appendChild(deleteButton);
+
+                    //         doneList.appendChild(li);
+                    //     });    
+                    // }
+
+                    getTodos();
+                    const todoForm = document.getElementById("todoForm");
+                    todoForm.addEventListener("submit", async function (event) {
+                        event.preventDefault();
+                        const todoInput = document.getElementById("taskInput");
+                        const newTodo = { text: todoInput.value, completed: false };
+                        const response = await fetch("/api/todos", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(newTodo)
+                        });
+                        todoInput.value = "";
+                        await getTodos();
+                    });
+
+                    // add route for clear button
+                    // clear done list too (api/doneList/clear-state)
+                    const clearButton = document.getElementById("clearButton");
+                    clearButton.addEventListener('click', async () => {
+                        const response = await fetch('/api/todos/clear-state', {
+                            method: "DELETE"
+                        });
+                        if (response.ok) {
+                            await getTodos();
+                        }
+                        // let response = await fetch('/api/done/clear-state', {
+                        //     method: "DELETE"
+                        // });
+                        // if (response.ok) {
+                        //     await getTodos();
+                        // }
+                    });
+                </script>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<ol>
+    <!-- <li>add task to todo: that works</li>
+    <li>clear list clears todo: that works</li> -->
+    <li>clear list clears doneList: add DELETE to clearlist function</li> '/api/done/clear-state', unsure how to add remove done to clear button
+    <!-- <li>remove line through for done button: delete/comment out</li> -->
+    <li>done button moves li to doneList: view the submit function, perhaps can copy and adjust?</li>
+    <li>undo button moves li to todos: copy above and swap it</li>
+    <li>delete button in doneList removes item: copy the delete for todo</li>
+</ol>

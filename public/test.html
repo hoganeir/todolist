@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogan's 2Do List</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css"
+        integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="page">
+        <h1 id="headline">Hogan's To Do List</h1>
+        <div id="main">
+            <div class="form">
+                <form id="todoForm">
+                    <label for="taskInput" id="taskLabel">New Task:</label>
+                    <div><input type="text" id="taskInput" placeholder="Add task here" required></div>
+                    <div>
+                        <button type="submitButton" id="submitButton" class="btn btn-primary">Add to list</button>
+                        <button type="clearButton" id="clearButton" class="btn btn-danger">Clear list</button>
+                    </div>
+                </form>
+            </div>
+            <div id="tasks">
+                <div id="tasks-header">
+                    <label for="taskheader" id="taskheader">Tasks</label>
+                </div>
+                <div id="tasks-lists">
+                    <ol class="list" id="todoList">
+                        <label for="todo" id="todolabel">To Do</label>
+                        <div id="lineitems">
+                            <li data-id="8">shower<div><button class="btn btn-default btn-xs"
+                                        id="donebutton">Done</button><button class="btn btn-default btn-xs"
+                                        id="deletebutton">Delete</button></div>
+                            </li>
+                            <li data-id="8">shower<div><button class="btn btn-default btn-xs"
+                                        id="donebutton">Done</button><button class="btn btn-default btn-xs"
+                                        id="deletebutton">Delete</button></div>
+                            </li>
+                            <li data-id="8">shower<div><button class="btn btn-default btn-xs"
+                                        id="donebutton">Done</button><button class="btn btn-default btn-xs"
+                                        id="deletebutton">Delete</button></div>
+                            </li>
+                        </div>
+                    </ol>
+                    <ol class="list" id="doneList">
+                        <label for="todo" id="todolabel">Done</label>
+                        <div id="lineitems">
+                            <li data-id="8">shower<div><button class="btn btn-default btn-xs"
+                                        id="donebutton">Done</button><button class="btn btn-default btn-xs"
+                                        id="deletebutton">Delete</button></div>
+                            </li>
+                            <li data-id="8">shower<div><button class="btn btn-default btn-xs"
+                                        id="donebutton">Done</button><button class="btn btn-default btn-xs"
+                                        id="deletebutton">Delete</button></div>
+                            </li>
+                            <li data-id="8">shower<div><button class="btn btn-default btn-xs"
+                                        id="donebutton">Done</button><button class="btn btn-default btn-xs"
+                                        id="deletebutton">Delete</button></div>
+                            </li>
+                        </div>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        let state = [];
+        async function getTodos() {
+            const response = await fetch("/api/todos");
+            const data = await response.json();
+            state = data;
+            render();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const todoList = document.getElementById("todoList");
+            const doneList = document.getElemenyById("doneList");
+            state.forEach(todo => {
+                const li = document.createElement("li");
+                li.textContent = todo.text;
+                li.dataset.id = todo.id;
+                li.classList.add('todo-item');
+
+                const buttonDiv = document.createElement('div');
+                buttonDiv.classList.add('todo-buttons');
+
+                const doneButton = document.createElement('button');
+                doneButton.classList.add('btn', 'btn-default', 'btn-xs');
+                doneButton.textContent = 'Done';
+                doneButton.classList.add('done-button');
+
+                todoList.addEventListener("click", function (event) {
+                    if (event.target.tagName === "LI") {
+                        event.target.classList.toggle("selected");
+                    };
+                });
+
+                doneButton.addEventListener("click", function () {
+                    const selectedItems = list1.querySelectorAll("li.selected");
+
+                    selectedItems.forEach(item => {
+                        doneList.appendChild(item);
+                        item.classList.remove("selected");
+                    });
+                });
+            });
+        });
+
+        // doneButton.addEventListener('click', async () => {
+        //     const response = await fetch(`/api/todos/${todo.id}`, {
+        //         method: "PUT",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         body: JSON.stringify({ completed: !todo.completed })
+        //     });
+        //     if (response.ok) {
+        //         await getTodos();
+        //     };
+        //     // doneList.appendChild(/api/todos/${todo.id});
+        // });
+        // buttonDiv.appendChild(doneButton);
+
+        // const deleteButton = document.createElement('button');
+        //             deleteButton.classList.add('btn', 'btn-default', 'btn-xs');
+        //             deleteButton.textContent = 'Delete';
+        //             deleteButton.classList.add('delete-button');
+        //             deleteButton.addEventListener('click', async () => {
+        //                 const response = await fetch(`/api/todos/${todo.id}`, {
+        //                     method: "DELETE"
+        //                 });
+        //                 if (response.ok) {
+        //                     await getTodos();
+        //                 };
+        //             });
+        //             buttonDiv.appendChild(deleteButton);
+
+        //             // delete button for Done list (see api/todos/done)
+        //             // undo button that sends item back to To Do
+
+        //             li.appendChild(buttonDiv);
+
+        //             todoList.appendChild(li);
+        //         });
+        //     };
+    </script>
+</body>
+
+</html>
+
+<div id="todo-list">
+    <label for="todoheader" id="todoheader">To Do</label>
+    <!-- <div class="list-title">To Do</div> -->
+        <ol class="list" id="todoList">
+            <!-- <li data-id="8">shower<div><button class="btn btn-default btn-xs" id="donebutton">Undo</button><button
+                class="btn btn-default btn-xs" id="deletebutton">Delete</button></div></li>
+            <li data-id="8">shower<div><button class="btn btn-default btn-xs" id="donebutton">Undo</button><button
+                class="btn btn-default btn-xs" id="deletebutton">Delete</button></div></li>
+            <li data-id="8">shower<div><button class="btn btn-default btn-xs" id="donebutton">Undo</button><button
+                class="btn btn-default btn-xs" id="deletebutton">Delete</button></div></li> -->
+        </ol>
+    </div>
+    <div id="done-list">
+    <label for="doneheader" id="doneheader">Done</label>
+    <!-- <div class="list-title">Done</div> -->
+        <ol class="list" id="doneList">
+                <!-- <li data-id="8">shower<div><button class="btn btn-default btn-xs" id="donebutton">Undo</button><button
+                    class="btn btn-default btn-xs" id="deletebutton">Delete</button></div></li>
+                <li data-id="8">shower<div><button class="btn btn-default btn-xs" id="donebutton">Undo</button><button
+                    class="btn btn-default btn-xs" id="deletebutton">Delete</button></div></li>
+                <li data-id="8">shower<div><button class="btn btn-default btn-xs" id="donebutton">Undo</button><button
+                    class="btn btn-default btn-xs" id="deletebutton">Delete</button></div></li> -->
+        </ol>
